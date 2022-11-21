@@ -36,7 +36,7 @@ public class Crawler {
                 String[] words = pageData.substring(pageData.indexOf(">", i), pageData.indexOf("</p>", i)).strip().split(" ");
                 for (String word : words){
                     if (data.containsKey(word)){
-                        
+
                     }
                 }
 
