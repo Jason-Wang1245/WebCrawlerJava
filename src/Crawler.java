@@ -1,76 +1,88 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class Crawler {
-    private HashSet<String> foundPages;
+    private HashSet<Webpage> webpages;
 
+    // CONSTRUCTOR
     public Crawler(){
-        foundPages = new HashSet<String>();
+        webpages = new HashSet<Webpage>();
     }
-    public String getPageData(String url){
+
+    // OTHER METHODS
+    // data retrieval of all unique pages that extend from the given webpage
+    public void crawl(Webpage webpage){
+        getHtml(webpage);
+        addPageTitle(webpage);
+        getWebData(webpage);
+        webpages.add(webpage);
+        for (Webpage externalWebpage : getReferenceLinks(webpage))
+            if (!webpages.contains(externalWebpage))
+                crawl(externalWebpage);
+    }
+    // gets the html form the url attribute of the given webpage argument and set its html attribute to the html found
+    private void getHtml(Webpage webpage){
         try {
-            String pageData = WebRequester.readURL(url);
-            foundPages.add(url);
-            return pageData;
+            webpage.setHtml(WebRequester.readURL(webpage.getUrl()));
         } catch (IOException e) {
-            return "Invalid URL";
+            System.out.println("Invalid Webpage");
         }
     }
-    public String getPageTitle(String html){
-        return searchHtml(html, "title");
+    // gets the page title of the given webpage and set its title attribute to the title found
+    private void addPageTitle(Webpage webpage){
+        webpage.setTitle(searchHtml(webpage, "<title>", "</title>"));
     }
+    // gets all words within paragraphs of the given webpage and add them to the argument webpage
+    private void getWebData(Webpage webpage){
+        String[] words = searchHtml(webpage, "<p", "</p>").strip().split("\\s+");
 
-    // gets a hashmap of all the words found
-    public HashMap<String, Integer> getWordData(String html){
-        HashMap<String, Integer> data = new HashMap<String, Integer>();
-        String[] words = searchHtml(html, "p").strip().split(" ");
         for (String word : words)
-            if (data.containsKey(word))
-                data.put(word, data.get(word) + 1);
-            else
-                data.put(word, 1);
-        return data;
-    }
+            webpage.addWord(word.toLowerCase());
 
-    // gets all content within the argument html tag
-    public String searchHtml(String html, String tagType){
-        String openTag = "<" + tagType;
-        String closeTag = "</" + tagType + ">";
+    }
+    // gets all reference links of the given webpage and add them to the argument webpage
+    private HashSet<Webpage> getReferenceLinks(Webpage webpage){
+        HashSet<Webpage> referenceLinks = new HashSet<Webpage>();
+        String html = webpage.getHtml();
+
+        int i = 0;
+        while (i < html.length() - 2){
+            if (html.substring(i, i + 2).equals("<a")){
+                String href = html.substring(html.indexOf("href=\"", i) + 6, html.indexOf("\"", html.indexOf("href=\"", i) + 6));
+                String fullPath = href;
+                // checks if the anchor tag is a relative link
+                if (href.startsWith("./")){
+                    // checks if seed url is http://.../... or just http://... and creates the full path based on the outcome
+                    if (!webpage.getUrl().substring(0, 7).contains("/"))
+                        fullPath = webpage.getUrl().concat(href.substring(2));
+                    else
+                        fullPath = webpage.getUrl().substring(0, webpage.getUrl().lastIndexOf("/") + 1).concat(href.substring(2));
+                }
+                webpage.addReferenceLink(fullPath);
+                referenceLinks.add(new Webpage(fullPath));
+                i = html.indexOf("</a>", i) + 4;
+            }
+            i++;
+        }
+
+        return referenceLinks;
+    }
+    // helper method that gets a specific portion of the argument webpage's html
+    private String searchHtml(Webpage webpage, String openTag, String closeTag){
+        String html = webpage.getHtml();
         String data = "";
 
         int i = 0;
-        while(i < html.length() - openTag.length()) {
+        while (i < html.length() - openTag.length()) {
             if (html.substring(i, i + openTag.length()).equals(openTag)){
                 data = data.concat(html.substring(html.indexOf(">", i) + 1, html.indexOf(closeTag, i)));
                 i += html.indexOf(closeTag, i) + closeTag.length();
             }
-            i += 1;
+            i++;
         }
         // returns null if no data was found
         return data;
     }
-
-    public void crawl(String url){
-        String pageData = getPageData(url);
-        PageData data = new PageData();
-        for (int i = 0; i < pageData.length(); i++){
-            if (pageData.substring(i, i + 2).equals("<a")){
-                String href = pageData.substring(pageData.indexOf("href=\"", i) + 6, pageData.indexOf("\"", pageData.indexOf("href=\"", i ) + 6));
-                if (href.startsWith("./"))
-                    if (!url.substring(7).contains("/")) {
-                        String fullPath = url.substring(0, url.indexOf(url.lastIndexOf("/") + 1)) + href.substring(2);
-                    } else {
-                        String fullPath = url + href.substring(2);
-                    }
-                if (!foundPages.contains(url)){
-                    crawl(url);
-                }
-            }
-        }
-    }
-
-
 
 }
