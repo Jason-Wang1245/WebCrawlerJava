@@ -2,25 +2,37 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 public class Crawler {
+    private int webpageId;
     private int numPages;
-    private HashSet<Webpage> webpages;
-    private HashMap<String, Double> idf;
+    private HashMap<Webpage, Integer> webpages;
+    private HashMap<String, Double> idfValues;
     private HashSet<String> foundWords;
 
     // CONSTRUCTOR
     public Crawler(){
-        webpages = new HashSet<Webpage>();
-        idf = new HashMap<String, Double>();
+        webpageId = 0;
+        webpages = new HashMap<Webpage, Integer>();
+        idfValues = new HashMap<String, Double>();
         foundWords = new HashSet<String>();
     }
 
     // GETTERS/SETTERS
+    public Webpage getWebpageWithUrl(String url){
+        for (Webpage webpage : webpages.keySet())
+            if (webpage.getUrl().equals(url))
+                return webpage;
+        return null;
+    }
+    public double getIdfValue(String word){
+        return idfValues.get(word);
+    }
     public HashSet<String> getFoundWords() {
         return foundWords;
     }
-    public HashSet<Webpage> getWebpages() {
+    public HashMap<Webpage, Integer> getWebpages() {
         return webpages;
     }
     public int getNumPages() {
@@ -33,9 +45,9 @@ public class Crawler {
         getHtml(webpage);
         addPageTitle(webpage);
         getWebData(webpage);
-        webpages.add(webpage);
+        webpages.put(webpage, webpageId++);
         for (Webpage externalWebpage : getReferenceLinks(webpage))
-            if (!webpages.contains(externalWebpage))
+            if (!webpages.containsKey(externalWebpage))
                 crawl(externalWebpage);
     }
     // gets the html form the url attribute of the given webpage argument and set its html attribute to the html found
@@ -107,6 +119,6 @@ public class Crawler {
     }
 
     public void addIdfValue(String word, double idfValue){
-        idf.put(word, idfValue);
+        idfValues.put(word, idfValue);
     }
 }

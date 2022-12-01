@@ -1,12 +1,13 @@
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Webpage {
+public class Webpage{
     private String url;
     private String html;
     private String title;
     private int numWords;
     private HashMap<String, Double> tfValues;
+    private HashMap<String, Double> tfIdfValues;
     private HashMap<String, Integer> data;
     private HashSet<String> referenceLinks;
     private HashSet<String> externalLinks;
@@ -18,6 +19,7 @@ public class Webpage {
         referenceLinks = new HashSet<String>();
         externalLinks = new HashSet<String>();
         tfValues = new HashMap<String, Double>();
+        tfIdfValues = new HashMap<String, Double>();
     }
 
     // GETTERS/SETTERS
@@ -32,6 +34,9 @@ public class Webpage {
     }
     public int getNumWords() {
         return numWords;
+    }
+    public double getTfValue(String word){
+        return tfValues.get(word);
     }
     public HashSet<String> getReferenceLinks() {
         return referenceLinks;
@@ -81,5 +86,8 @@ public class Webpage {
     }
     public void addTfValue(String word, double tfValue){
         tfValues.put(word, tfValue);
+    }
+    public void addTfIdfValue(String word, double tfIdfValue){
+        tfIdfValues.put(word, tfIdfValue);
     }
 }
