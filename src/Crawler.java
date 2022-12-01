@@ -1,13 +1,30 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Crawler {
+    private int numPages;
     private HashSet<Webpage> webpages;
+    private HashMap<String, Double> idf;
+    private HashSet<String> foundWords;
 
     // CONSTRUCTOR
     public Crawler(){
         webpages = new HashSet<Webpage>();
+        idf = new HashMap<String, Double>();
+        foundWords = new HashSet<String>();
+    }
+
+    // GETTERS/SETTERS
+    public HashSet<String> getFoundWords() {
+        return foundWords;
+    }
+    public HashSet<Webpage> getWebpages() {
+        return webpages;
+    }
+    public int getNumPages() {
+        return numPages;
     }
 
     // OTHER METHODS
@@ -36,10 +53,12 @@ public class Crawler {
     // gets all words within paragraphs of the given webpage and add them to the argument webpage
     private void getWebData(Webpage webpage){
         String[] words = searchHtml(webpage, "<p", "</p>").strip().split("\\s+");
+        webpage.setNumWords(words.length);
 
-        for (String word : words)
+        for (String word : words){
+            foundWords.add(word);
             webpage.addWord(word.toLowerCase());
-
+        }
     }
     // gets all reference links of the given webpage and add them to the argument webpage
     private HashSet<Webpage> getReferenceLinks(Webpage webpage){
@@ -60,7 +79,9 @@ public class Crawler {
                         fullPath = webpage.getUrl().substring(0, webpage.getUrl().lastIndexOf("/") + 1).concat(href.substring(2));
                 }
                 webpage.addReferenceLink(fullPath);
-                referenceLinks.add(new Webpage(fullPath));
+                Webpage referencePage = new Webpage(fullPath);
+                referenceLinks.add(referencePage);
+
                 i = html.indexOf("</a>", i) + 4;
             }
             i++;
@@ -69,13 +90,13 @@ public class Crawler {
         return referenceLinks;
     }
     // helper method that gets a specific portion of the argument webpage's html
-    private String searchHtml(Webpage webpage, String openTag, String closeTag){
+    private String searchHtml(Webpage webpage, String openTag, String closeTag) {
         String html = webpage.getHtml();
         String data = "";
 
         int i = 0;
         while (i < html.length() - openTag.length()) {
-            if (html.substring(i, i + openTag.length()).equals(openTag)){
+            if (html.substring(i, i + openTag.length()).equals(openTag)) {
                 data = data.concat(html.substring(html.indexOf(">", i) + 1, html.indexOf(closeTag, i)));
                 i += html.indexOf(closeTag, i) + closeTag.length();
             }
@@ -85,4 +106,7 @@ public class Crawler {
         return data;
     }
 
+    public void addIdfValue(String word, double idfValue){
+        idf.put(word, idfValue);
+    }
 }
