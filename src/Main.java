@@ -3,16 +3,20 @@ import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args){
-//        Crawler crawler = new Crawler();
-//        Webpage webpage = new Webpage("http://people.scs.carleton.ca/~davidmckenney/tinyfruits/N-0.html");
-//        crawler.crawl(webpage);
-//        for (Webpage page : crawler.getWebpages().keySet()){
-//            System.out.println(page.getUrl() + " ; " + crawler.getWebpages().get(page));
-//        }
+        Webpage webpage = new Webpage("http://people.scs.carleton.ca/~davidmckenney/tinyfruits/N-0.html");
+        Crawler crawler = new Crawler();
+        crawler.crawl(webpage);
+        CrawlerAnalysis analysis = new CrawlerAnalysis(crawler);
+        analysis.analysis();
 
-        double[][] a = {{1 , 5}, {2, 3}, {1, 7}};
-        double[][] b = {{1, 2, 3, 7}, {5, 2, 8, 1}};
-        System.out.println(Arrays.deepToString(MatrixMultiplication.multiplyMatrix(a, b)));
+
+        System.out.println(crawler.idfValues);
+        System.out.println();
+        for (Webpage page : crawler.getWebpages().keySet()){
+            System.out.print(page.getId());
+            System.out.println(page);
+        }
+
     }
 
     public static void test(int[] list){

@@ -6,9 +6,8 @@ import java.util.TreeSet;
 
 public class Crawler {
     private int webpageId;
-    private int numPages;
     private HashMap<Webpage, Integer> webpages;
-    private HashMap<String, Double> idfValues;
+    public HashMap<String, Double> idfValues;
     private HashSet<String> foundWords;
 
     // CONSTRUCTOR
@@ -36,7 +35,7 @@ public class Crawler {
         return webpages;
     }
     public int getNumPages() {
-        return numPages;
+        return webpages.size();
     }
 
     // OTHER METHODS
@@ -45,7 +44,8 @@ public class Crawler {
         getHtml(webpage);
         addPageTitle(webpage);
         getWebData(webpage);
-        webpages.put(webpage, webpageId++);
+        webpages.put(webpage, webpageId);
+        webpageId++;
         for (Webpage externalWebpage : getReferenceLinks(webpage))
             if (!webpages.containsKey(externalWebpage))
                 crawl(externalWebpage);

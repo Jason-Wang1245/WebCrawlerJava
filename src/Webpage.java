@@ -2,10 +2,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Webpage{
+    private int id;
     private String url;
     private String html;
     private String title;
     private int numWords;
+    private double pageRank;
     private HashMap<String, Double> tfValues;
     private HashMap<String, Double> tfIdfValues;
     private HashMap<String, Integer> data;
@@ -22,9 +24,12 @@ public class Webpage{
         tfIdfValues = new HashMap<String, Double>();
     }
 
-    // GETTERS/SETTERS
+    // GETTERS
     public boolean containsWord(String word){
         return data.containsKey(word);
+    }
+    public int getId(){
+        return id;
     }
     public String getHtml() {
         return html;
@@ -44,8 +49,9 @@ public class Webpage{
     public HashMap<String, Integer> getData() {
         return data;
     }
-    public void setUrl(String url) {
-        this.url = url;
+    // SETTERS
+    public void setId(int id){
+        this.id = id;
     }
     public void setTitle(String title) {
         this.title = title;
@@ -55,6 +61,9 @@ public class Webpage{
     }
     public void setNumWords(int numWords) {
         this.numWords = numWords;
+    }
+    public void setPageRank(double pageRank){
+        this.pageRank = pageRank;
     }
 
     // OVERRIDE METHODS
@@ -69,6 +78,11 @@ public class Webpage{
     @Override
     public int hashCode(){
         return url.hashCode();
+    }
+    // toString for testing purposes
+    @Override
+    public String toString(){
+        return "url: " + url + ", tf: " + pageRank;
     }
 
     // OTHER METHODS

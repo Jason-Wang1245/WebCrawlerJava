@@ -6,7 +6,16 @@ public class CrawlerAnalysis {
         this.crawler = crawler;
     }
 
-
+    public void analysis(){
+        for (String word : crawler.getFoundWords())
+            getIdf(word);
+        for (Webpage webpage : crawler.getWebpages().keySet()){
+            getExternalLinks(webpage);
+            getPageTf(webpage);
+            getTfIdf(webpage);
+        }
+        getPageRank();
+    }
     // OTHER METHODS
     // with argument webpage, adds all the external references for the webpage based on crawled data in private attribute crawler
     private void getExternalLinks(Webpage webpage){
@@ -25,22 +34,24 @@ public class CrawlerAnalysis {
         for (Webpage webpage : crawler.getWebpages().keySet())
             if (webpage.containsWord(word))
                 counter++;
-        crawler.addIdfValue(word, crawler.getNumPages() / (double) (1 + counter));
+        crawler.addIdfValue(word, Math.log(crawler.getNumPages() / (double) (1 + counter)) / Math.log(2));
     }
     // with argument webpage, calculates and adds all tfIdfValue based on the webpages data attribute
     private void getTfIdf(Webpage webpage){
-        for (String word : webpage.getData().keySet()) {
+        for (String word : webpage.getData().keySet())
             webpage.addTfIdfValue(word, (Math.log(1 + webpage.getTfValue(word)) / Math.log(2)) * crawler.getIdfValue(word));
-        }
+
     }
 
     public void getPageRank(){
-        double[][] matrixA = new double[crawler.getNumPages()][crawler.getNumPages()];
-        double[][] adjacencyMatrix = new double[crawler.getNumPages()][crawler.getNumPages()];
-        // initialize values for matrixA
+        // creates the initial vector with sum of all elements adding up to 1 (later used to calculate euclidean distance for page rank score)
+        double[][] vectorA = new double[1][crawler.getNumPages()];
+        double[][] adjacencyMatrix = new double[crawler.getNumPages()][1];
+        double euclideanDistance = 1;
+        // let N represent the number of webpages
+        // creates a matrix that has N indices
         for (int i = 0; i < crawler.getNumPages(); i++)
-            for (int j = 0; j < crawler.getNumPages(); j++)
-                matrixA[i][j] = (double) 1 / crawler.getNumPages();
+            vectorA[0][i] = (double) 1 / crawler.getNumPages();
 
         for (Webpage webpage : crawler.getWebpages().keySet()){
             double[] row = new double[crawler.getNumPages()];
@@ -51,6 +62,20 @@ public class CrawlerAnalysis {
             adjacencyMatrix[crawler.getWebpages().get(webpage)] = row;
         }
 
+        adjacencyMatrix = MatrixMultiplication.scalarMultiplication(adjacencyMatrix, 1 - 0.1);
 
+        for (int i = 0; i < crawler.getNumPages(); i++)
+            for (int j = 0; j < crawler.getNumPages(); j++)
+                adjacencyMatrix[i][j] += 0.1 / crawler.getNumPages();
+
+        double[][] vectorB = vectorA.clone();
+        while (euclideanDistance > 0.0001){
+            vectorA = vectorB.clone();
+            vectorB = MatrixMultiplication.multiplyMatrix(vectorA, adjacencyMatrix);
+            euclideanDistance = MatrixMultiplication.euclideanDistance(vectorA, vectorB);
+        }
+
+        for (Webpage webpage : crawler.getWebpages().keySet())
+            webpage.setPageRank(vectorB[0][crawler.getWebpages().get(webpage)]);
     }
 }
