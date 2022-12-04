@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Webpage{
+public class Webpage implements Serializable {
     private int id;
     private String url;
     private String html;
@@ -28,8 +29,8 @@ public class Webpage{
     public boolean containsWord(String word){
         return data.containsKey(word);
     }
-    public int getId(){
-        return id;
+    public double getPageRank() {
+        return pageRank;
     }
     public String getHtml() {
         return html;
@@ -43,12 +44,19 @@ public class Webpage{
     public double getTfValue(String word){
         return tfValues.get(word);
     }
+    public double getTfIdfValue(String word){
+        return tfIdfValues.get(word);
+    }
     public HashSet<String> getReferenceLinks() {
         return referenceLinks;
     }
     public HashMap<String, Integer> getData() {
         return data;
     }
+    public HashSet<String> getExternalLinks() {
+        return externalLinks;
+    }
+
     // SETTERS
     public void setId(int id){
         this.id = id;
@@ -82,7 +90,7 @@ public class Webpage{
     // toString for testing purposes
     @Override
     public String toString(){
-        return "url: " + url + ", tf: " + pageRank;
+        return url.substring(7).replace("/", "}");
     }
 
     // OTHER METHODS

@@ -1,20 +1,18 @@
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-public class Crawler {
+public class Crawler{
     private int webpageId;
     private HashMap<Webpage, Integer> webpages;
-    public HashMap<String, Double> idfValues;
     private HashSet<String> foundWords;
 
     // CONSTRUCTOR
     public Crawler(){
         webpageId = 0;
         webpages = new HashMap<Webpage, Integer>();
-        idfValues = new HashMap<String, Double>();
         foundWords = new HashSet<String>();
     }
 
@@ -25,9 +23,6 @@ public class Crawler {
                 return webpage;
         return null;
     }
-    public double getIdfValue(String word){
-        return idfValues.get(word);
-    }
     public HashSet<String> getFoundWords() {
         return foundWords;
     }
@@ -37,6 +32,7 @@ public class Crawler {
     public int getNumPages() {
         return webpages.size();
     }
+
 
     // OTHER METHODS
     // data retrieval of all unique pages that extend from the given webpage
@@ -116,9 +112,5 @@ public class Crawler {
         }
         // returns null if no data was found
         return data;
-    }
-
-    public void addIdfValue(String word, double idfValue){
-        idfValues.put(word, idfValue);
     }
 }

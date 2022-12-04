@@ -1,9 +1,18 @@
-public class CrawlerAnalysis {
+import java.util.HashMap;
+import java.util.HashSet;
+
+public class CrawlerAnalysis extends Savable{
     private Crawler crawler;
+    private HashMap<String, Double> idfValues;
 
     // CONSTRUCTOR
     public CrawlerAnalysis(Crawler crawler){
         this.crawler = crawler;
+        idfValues = new HashMap<String, Double>();
+    }
+
+    public HashMap<String, Double> getIdfValues() {
+        return idfValues;
     }
 
     public void analysis(){
@@ -15,6 +24,7 @@ public class CrawlerAnalysis {
             getTfIdf(webpage);
         }
         getPageRank();
+        save(crawler.getWebpages());
     }
     // OTHER METHODS
     // with argument webpage, adds all the external references for the webpage based on crawled data in private attribute crawler
@@ -34,16 +44,16 @@ public class CrawlerAnalysis {
         for (Webpage webpage : crawler.getWebpages().keySet())
             if (webpage.containsWord(word))
                 counter++;
-        crawler.addIdfValue(word, Math.log(crawler.getNumPages() / (double) (1 + counter)) / Math.log(2));
+        idfValues.put(word, Math.log(crawler.getNumPages() / (double) (1 + counter)) / Math.log(2));
     }
     // with argument webpage, calculates and adds all tfIdfValue based on the webpages data attribute
     private void getTfIdf(Webpage webpage){
         for (String word : webpage.getData().keySet())
-            webpage.addTfIdfValue(word, (Math.log(1 + webpage.getTfValue(word)) / Math.log(2)) * crawler.getIdfValue(word));
+            webpage.addTfIdfValue(word, (Math.log(1 + webpage.getTfValue(word)) / Math.log(2)) * idfValues.get(word));
 
     }
 
-    public void getPageRank(){
+    private void getPageRank(){
         // creates the initial vector with sum of all elements adding up to 1 (later used to calculate euclidean distance for page rank score)
         double[][] vectorA = new double[1][crawler.getNumPages()];
         double[][] adjacencyMatrix = new double[crawler.getNumPages()][1];
