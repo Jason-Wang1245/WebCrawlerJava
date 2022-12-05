@@ -37,7 +37,9 @@ public class Crawler{
     // OTHER METHODS
     // data retrieval of all unique pages that extend from the given webpage
     public void crawl(Webpage webpage){
-        getHtml(webpage);
+        // exits crawl process if the webpage object has an invalid url
+        if (!getHtml(webpage))
+            return;
         addPageTitle(webpage);
         getWebData(webpage);
         webpages.put(webpage, webpageId);
@@ -47,11 +49,13 @@ public class Crawler{
                 crawl(externalWebpage);
     }
     // gets the html form the url attribute of the given webpage argument and set its html attribute to the html found
-    private void getHtml(Webpage webpage){
+    private boolean getHtml(Webpage webpage){
         try {
             webpage.setHtml(WebRequester.readURL(webpage.getUrl()));
+            return true;
         } catch (IOException e) {
-            System.out.println("Invalid Webpage");
+            System.out.println("Invalid seed url.");
+            return false;
         }
     }
     // gets the page title of the given webpage and set its title attribute to the title found

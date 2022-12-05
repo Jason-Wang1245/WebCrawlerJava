@@ -3,7 +3,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Webpage implements Serializable {
-    private int id;
     private String url;
     private String html;
     private String title;
@@ -32,6 +31,9 @@ public class Webpage implements Serializable {
     public double getPageRank() {
         return pageRank;
     }
+    public String getTitle() {
+        return title;
+    }
     public String getHtml() {
         return html;
     }
@@ -42,14 +44,23 @@ public class Webpage implements Serializable {
         return numWords;
     }
     public double getTfValue(String word){
+        if (tfValues.get(word) == null)
+            return 0;
         return tfValues.get(word);
     }
     public double getTfIdfValue(String word){
+        if (tfIdfValues.get(word) == null)
+            return 0;
         return tfIdfValues.get(word);
     }
     public HashSet<String> getReferenceLinks() {
         return referenceLinks;
     }
+
+    public HashMap<String, Double> getTfIdfValues() {
+        return tfIdfValues;
+    }
+
     public HashMap<String, Integer> getData() {
         return data;
     }
@@ -58,9 +69,6 @@ public class Webpage implements Serializable {
     }
 
     // SETTERS
-    public void setId(int id){
-        this.id = id;
-    }
     public void setTitle(String title) {
         this.title = title;
     }
@@ -90,7 +98,7 @@ public class Webpage implements Serializable {
     // toString for testing purposes
     @Override
     public String toString(){
-        return url.substring(7).replace("/", "}");
+        return url.substring(8).replace("/", "}");
     }
 
     // OTHER METHODS

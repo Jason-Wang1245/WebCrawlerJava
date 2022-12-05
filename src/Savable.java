@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Savable {
-    private void saveToFile(String fileName, Object o){
+    public void saveToFile(String fileName, Object o){
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("resources" + File.separator + fileName));
             out.writeObject(o);
@@ -21,16 +21,20 @@ public abstract class Savable {
             saveToFile(o.toString(), o);
     }
 
-    public void checkDirectory(){
-        File directory = new File("resources");
+    public void resetDirectory(String path){
+        deleteDirectory(new File(path));
+        makeDirectory(new File(path));
+    }
+
+    public void makeDirectory(File directory){
         if (!directory.exists())
             directory.mkdir();
     }
-    public void resetDirectory(File directory){
+    public void deleteDirectory(File directory){
         File[] files = directory.listFiles();
         if (files != null)
             for (File file : files)
-                resetDirectory(file);
+                deleteDirectory(file);
         directory.delete();
     }
 }

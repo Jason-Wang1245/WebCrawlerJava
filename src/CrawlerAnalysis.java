@@ -18,6 +18,7 @@ public class CrawlerAnalysis extends Savable{
     public void analysis(){
         for (String word : crawler.getFoundWords())
             getIdf(word);
+        saveToFile("idf", idfValues);
         for (Webpage webpage : crawler.getWebpages().keySet()){
             getExternalLinks(webpage);
             getPageTf(webpage);
@@ -50,7 +51,6 @@ public class CrawlerAnalysis extends Savable{
     private void getTfIdf(Webpage webpage){
         for (String word : webpage.getData().keySet())
             webpage.addTfIdfValue(word, (Math.log(1 + webpage.getTfValue(word)) / Math.log(2)) * idfValues.get(word));
-
     }
 
     private void getPageRank(){

@@ -4,11 +4,17 @@ import java.util.List;
 
 public class SearchData extends Readable{
     public List<String> getIncomingLinks(String url){
-        return new ArrayList<String>(readList(url, 0));
+        HashSet<String> list = readList(url, 0);
+        if (list == null)
+            return null;
+        return new ArrayList<String>(list);
     }
 
     public List<String> getOutgoingLinks(String url){
-        return new ArrayList<String>(readList(url, 1));
+        HashSet<String> list = readList(url, 1);
+        if (list == null)
+            return null;
+        return new ArrayList<String>(list);
     }
 
     public double getPageRank(String url){
@@ -24,6 +30,8 @@ public class SearchData extends Readable{
     }
 
     public double getIdfValue(String word){
-        return readIdfValue(word);
+        if (readIdfList().get(word) == null)
+            return 0;
+        return readIdfList().get(word);
     }
 }
