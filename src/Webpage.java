@@ -56,16 +56,18 @@ public class Webpage implements Serializable {
     public HashSet<String> getReferenceLinks() {
         return referenceLinks;
     }
-
+    public HashSet<String> getExternalLinks() {
+        return externalLinks;
+    }
+    public HashMap<String, Double> getTfValues() {
+        return tfValues;
+    }
     public HashMap<String, Double> getTfIdfValues() {
         return tfIdfValues;
     }
 
     public HashMap<String, Integer> getData() {
         return data;
-    }
-    public HashSet<String> getExternalLinks() {
-        return externalLinks;
     }
 
     // SETTERS

@@ -50,13 +50,18 @@ public class Crawler{
     }
     // gets the html form the url attribute of the given webpage argument and set its html attribute to the html found
     private boolean getHtml(Webpage webpage){
-        try {
-            webpage.setHtml(WebRequester.readURL(webpage.getUrl()));
-            return true;
-        } catch (IOException e) {
-            System.out.println("Invalid seed url.");
-            return false;
+        int i = 0;
+        // if a read failed, tries 10 times before returning false for invalid read.
+        while (i < 10){
+            try {
+                webpage.setHtml(WebRequester.readURL(webpage.getUrl()));
+                return true;
+            } catch (IOException e) {
+                System.out.println("Failed to read URL(" + webpage.getUrl() + ")");
+                i++;
+            }
         }
+        return false;
     }
     // gets the page title of the given webpage and set its title attribute to the title found
     private void addPageTitle(Webpage webpage){

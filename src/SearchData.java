@@ -1,37 +1,49 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 public class SearchData extends Readable{
     public List<String> getIncomingLinks(String url){
-        HashSet<String> list = readList(url, 0);
+        HashSet<String> list = readHashSet("referenceLinks", "resources", url);
         if (list == null)
             return null;
         return new ArrayList<String>(list);
     }
 
     public List<String> getOutgoingLinks(String url){
-        HashSet<String> list = readList(url, 1);
+        HashSet<String> list = readHashSet("externalLinks", "resources", url);
         if (list == null)
             return null;
         return new ArrayList<String>(list);
     }
 
     public double getPageRank(String url){
-        return readValue(url, "", 0);
+        return readValue("pageRank", "resources", url);
     }
 
     public double getTfValue(String url, String word){
-        return readValue(url, word, 1);
+        HashMap<String, Double> tfValues = readHashMap("tf", "resources", url);
+        if (tfValues == null || !tfValues.containsKey(word))
+            return 0;
+        return tfValues.get(word);
     }
 
     public double getTfIdfValue(String url, String word){
-        return readValue(url, word, 2);
+        HashMap<String, Double> tfIdfValues = readHashMap("tfidf", "resources", url);
+        if (tfIdfValues == null || !tfIdfValues.containsKey(word))
+            return 0;
+        return tfIdfValues.get(word);
     }
 
     public double getIdfValue(String word){
-        if (readIdfList().get(word) == null)
+        HashMap<String, Double> idfValues = readIdfList("resources");
+        if (idfValues == null || !idfValues.containsKey(word))
             return 0;
-        return readIdfList().get(word);
+        return idfValues.get(word);
+    }
+
+    public String getTitle(String url){
+        return readString("title", "resources", url);
     }
 }

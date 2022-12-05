@@ -73,7 +73,7 @@ public class Search extends Readable{
             if (file.getName().equals("idf"))
                 continue;
             String url = "https://" + file.getName().replace("}", "/");
-            HashMap<String, Double> tfIdfList = readTfIdfList(url);
+            HashMap<String, Double> tfIdfList = readHashMap("tfidf", "resources", url);
             double numerator = 0;
             double pageDenominator = 0;
             double cosineSimilarity;

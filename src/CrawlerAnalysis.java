@@ -18,14 +18,14 @@ public class CrawlerAnalysis extends Savable{
     public void analysis(){
         for (String word : crawler.getFoundWords())
             getIdf(word);
-        saveToFile("idf", idfValues);
+        saveList("idf", "resources", idfValues);
         for (Webpage webpage : crawler.getWebpages().keySet()){
             getExternalLinks(webpage);
             getPageTf(webpage);
             getTfIdf(webpage);
         }
         getPageRank();
-        save(crawler.getWebpages());
+        save(crawler.getWebpages(), "resources");
     }
     // OTHER METHODS
     // with argument webpage, adds all the external references for the webpage based on crawled data in private attribute crawler
