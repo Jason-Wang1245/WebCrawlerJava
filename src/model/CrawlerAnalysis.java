@@ -80,7 +80,7 @@ public class CrawlerAnalysis extends Savable{
                 adjacencyMatrix[i][j] += 0.1 / crawler.getNumPages();
 
         double[][] vectorB = vectorA.clone();
-        while (euclideanDistance > 0.000001){
+        while (euclideanDistance > 0.0000000001){
             vectorA = vectorB.clone();
             vectorB = MatrixMultiplication.multiplyMatrix(vectorA, adjacencyMatrix);
             euclideanDistance = MatrixMultiplication.euclideanDistance(vectorA, vectorB);

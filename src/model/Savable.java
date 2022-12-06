@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.HashMap;
 
 public abstract class Savable {
+    public Savable(){}
     protected void save(HashMap<Webpage,?> list, String path){
         for (Webpage webpage : list.keySet()){
             makeDirectory(new File(path + File.separator + webpage.getUrl().substring(8).replace("/", "}")));
@@ -59,11 +60,11 @@ public abstract class Savable {
     }
 
     // resets current cache folder
-    public void resetDirectory(String path){
+    protected void resetDirectory(String path){
         deleteDirectory(new File(path));
         makeDirectory(new File(path));
     }
-    public void makeDirectory(File directory){
+    protected void makeDirectory(File directory){
         if (!directory.exists())
             directory.mkdir();
     }

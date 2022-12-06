@@ -22,4 +22,9 @@ public class WebpageResult implements SearchResult{
     public double getScore() {
         return score;
     }
+
+    @Override
+    public String toString(){
+        return title + ": " + score;
+    }
 }

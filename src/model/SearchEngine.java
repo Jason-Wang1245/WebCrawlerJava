@@ -1,8 +1,10 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchEngine implements ProjectTester{
+    List<SearchResult> searchResults;
     private Crawler crawler;
     private CrawlerAnalysis crawlerAnalysis;
     private SearchData searchData;
@@ -13,6 +15,7 @@ public class SearchEngine implements ProjectTester{
         crawlerAnalysis = new CrawlerAnalysis(crawler);
         searchData = new SearchData();
         search = new Search();
+        searchResults = new ArrayList<SearchResult>();
     }
 
     @Override
@@ -58,6 +61,14 @@ public class SearchEngine implements ProjectTester{
 
     @Override
     public List<SearchResult> search(String query, boolean boost, int X) {
-        return search.search(query, boost, X);
+        searchResults = search.search(query, boost, X);
+        return searchResults;
+    }
+
+    public String[] getSearchResults(){
+        String[] list = new String[searchResults.size()];
+        for (int i = 0; i < searchResults.size(); i++)
+            list[i] = searchResults.get(i).toString();
+        return list;
     }
 }

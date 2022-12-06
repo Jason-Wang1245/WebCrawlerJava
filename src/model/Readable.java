@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Readable {
-    public Readable(){
-
-    }
+    public Readable(){}
     protected HashSet<String> readHashSet(String fileName, String path, String url){
         try {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(path + File.separator + url.substring(8).replace("/", "}") + File.separator + fileName));

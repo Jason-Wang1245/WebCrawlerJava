@@ -16,8 +16,11 @@ public class Test {
 //        analysis.resetDirectory("resources");
 //        analysis.analysis();
 
-        SearchData searchData = new SearchData();
-        System.out.println(searchData.getIdfValue("peach"));
+//        SearchData searchData = new SearchData();
+//        System.out.println(searchData.getIdfValue("peach"));
+        SearchEngine searchEngine = new SearchEngine();
 
+        for (SearchResult result : searchEngine.search("banana apple", true, 10))
+            System.out.println(result);
     }
 }

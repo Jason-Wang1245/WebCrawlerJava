@@ -89,6 +89,8 @@ public class Search extends Readable{
                 continue;
             String url = "https://" + file.getName().replace("}", "/");
             HashMap<String, Double> tfIdfList = readHashMap("tfidf", "resources", url);
+            if (tfIdfList == null)
+                break;
             double numerator = 0;
             double pageDenominator = 0;
             double cosineSimilarity;
