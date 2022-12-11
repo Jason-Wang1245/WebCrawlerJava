@@ -1,7 +1,7 @@
 package model;
 
 import java.util.HashMap;
-
+// this class is responsible for handling all calculations after a crawl has been performed
 public class CrawlerAnalysis extends Savable{
     private Crawler crawler;
     private HashMap<String, Double> idfValues;
@@ -15,10 +15,11 @@ public class CrawlerAnalysis extends Savable{
     public HashMap<String, Double> getIdfValues() {
         return idfValues;
     }
-
+    // with the provided crawler instance given within the constructor, it will calculate all tf, idf, tf-idf, and pagerank values
     public void analysis(){
         for (String word : crawler.getFoundWords())
             getIdf(word);
+        // calls parent saveList method to save idf values to file
         saveList("idf", "resources", idfValues);
         for (Webpage webpage : crawler.getWebpages().keySet()){
             getExternalLinks(webpage);
@@ -26,9 +27,10 @@ public class CrawlerAnalysis extends Savable{
             getTfIdf(webpage);
         }
         getPageRank();
+        // calls parents save method to save all webpages to file
         save(crawler.getWebpages(), "resources");
     }
-    // OTHER METHODS
+    // HELPER METHODS
     // with argument webpage, adds all the external references for the webpage based on crawled data in private attribute crawler
     private void getExternalLinks(Webpage webpage){
         for (Webpage otherWebpage : crawler.getWebpages().keySet())

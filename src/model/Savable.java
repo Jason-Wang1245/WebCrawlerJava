@@ -2,7 +2,8 @@ package model;
 
 import java.io.*;
 import java.util.HashMap;
-
+// savable is an abstract class rather than an interface because these implementations are fairly concrete no matter the implementation of the crawler and calculation portions
+// certain fields are protected because they are needed within child classes. Making them public would be bad implementation because these methods are not needed within the child classes instances.
 public abstract class Savable {
     public Savable(){}
     protected void save(HashMap<Webpage,?> list, String path){
@@ -17,6 +18,8 @@ public abstract class Savable {
         }
 
     }
+    // most of these methods have boolean return statements to check if the saving process was successful
+    // saves a double value to file
     private boolean saveValue(String fileName, String path, String url, double value){
         try {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path + File.separator + url.substring(8).replace("/", "}") + File.separator + fileName));
@@ -27,6 +30,7 @@ public abstract class Savable {
             return false;
         }
     }
+    // saves a singular string value to file
     private boolean saveString(String fileName, String path, String url, String value){
         try {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path + File.separator + url.substring(8).replace("/", "}") + File.separator + fileName));
@@ -37,6 +41,7 @@ public abstract class Savable {
             return false;
         }
     }
+    // generic saveList method that will save any list
     protected boolean saveList(String fileName, String path, String url, Object o){
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path + File.separator + url.substring(8).replace("/", "}") + File.separator + fileName));
@@ -59,7 +64,8 @@ public abstract class Savable {
         }
     }
 
-    // resets current cache folder
+    // resets current cache folder, with path being the name
+    // having an argument for the path of the cache folder makes for reusable code
     protected void resetDirectory(String path){
         deleteDirectory(new File(path));
         makeDirectory(new File(path));

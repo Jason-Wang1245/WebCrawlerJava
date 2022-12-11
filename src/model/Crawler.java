@@ -3,7 +3,7 @@ package model;
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
-
+// this class is responsible for crawling a webpage based on a given url. This class only visits each unique webpage once
 public class Crawler{
     private int webpageId;
     private HashMap<Webpage, Integer> webpages;
@@ -45,9 +45,11 @@ public class Crawler{
         webpages.put(webpage, webpageId);
         webpageId++;
         for (Webpage externalWebpage : getReferenceLinks(webpage))
+            // recursively calls this method for new webpages that have been found that have not been crawled
             if (!webpages.containsKey(externalWebpage))
                 crawl(externalWebpage);
     }
+    // HELPER METHODS
     // gets the html form the url attribute of the given webpage argument and set its html attribute to the html found
     private boolean getHtml(Webpage webpage){
         int i = 0;
@@ -119,7 +121,7 @@ public class Crawler{
             }
             i++;
         }
-        // returns null if no data was found
+        // returns an empty string if no data was found
         return data;
     }
 }

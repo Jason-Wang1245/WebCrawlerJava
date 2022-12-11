@@ -1,5 +1,6 @@
 package model;
 
+// implements the required implementations of the SearchResult interface
 public class WebpageResult implements SearchResult{
     private String url;
     private String title;

@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-
+// stores each webpage within an instance of this class. Most of these methods are very self-explanatory
 public class Webpage implements Serializable {
     private String url;
     private String html;
