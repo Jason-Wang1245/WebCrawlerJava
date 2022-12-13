@@ -20,7 +20,7 @@ public abstract class Savable {
     }
     // most of these methods have boolean return statements to check if the saving process was successful
     // saves a double value to file
-    private boolean saveValue(String fileName, String path, String url, double value){
+    protected boolean saveValue(String fileName, String path, String url, double value){
         try {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path + File.separator + url.substring(8).replace("/", "}") + File.separator + fileName));
             out.writeDouble(value);
@@ -31,7 +31,7 @@ public abstract class Savable {
         }
     }
     // saves a singular string value to file
-    private boolean saveString(String fileName, String path, String url, String value){
+    protected boolean saveString(String fileName, String path, String url, String value){
         try {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(path + File.separator + url.substring(8).replace("/", "}") + File.separator + fileName));
             out.writeUTF(value);
@@ -70,7 +70,7 @@ public abstract class Savable {
         deleteDirectory(new File(path));
         makeDirectory(new File(path));
     }
-    protected void makeDirectory(File directory){
+    private void makeDirectory(File directory){
         if (!directory.exists())
             directory.mkdir();
     }

@@ -53,6 +53,9 @@ public class Search extends Readable{
         reset();
         getQueryVector(query);
         getPageScores(boosted);
+        // if the provided x argument is negative or greater than the number of pages crawled, sort and return all search results instead
+        if (x > searchResults.size() || x < 0)
+            x = searchResults.size();
         selectionSort(x);
         return searchResults.subList(0, x);
     }

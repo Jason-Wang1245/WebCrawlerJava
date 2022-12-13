@@ -1,6 +1,6 @@
 package model;
 
-public class MatrixMultiplication {
+public abstract class MatrixMultiplication {
     public static double[][] scalarMultiplication(double[][] matrix, double scalarValue){
         double[][] result = matrix.clone();
         for (int i = 0; i < result.length; i++)
